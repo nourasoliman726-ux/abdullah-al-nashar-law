@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { CheckCircle2, Paperclip, Info } from "lucide-react";
+import { CheckCircle2, Paperclip, Info, AlertCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FloatingWhatsapp from "@/components/FloatingWhatsapp";
 import { SITE } from "@/lib/constants";
+import { createClient } from "@/lib/supabase/client";
+import { uploadAttachment } from "@/lib/uploadAttachment";
 
 const TOPICS = [
   "الأحوال الشخصية وقضايا الأسرة",
@@ -31,6 +33,7 @@ const labelClass = "block text-sm font-semibold text-slate mb-2 text-right";
 export default function AskAbdullahPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -48,13 +51,31 @@ export default function AskAbdullahPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
-    // TODO: هيتوصل بـ Supabase في خطوة قاعدة البيانات
-    console.log("سؤال جديد:", form);
-    await new Promise((r) => setTimeout(r, 700));
+    try {
+      const fileUrl = await uploadAttachment(form.file, "contact-messages");
 
-    setLoading(false);
-    setSubmitted(true);
+      const supabase = createClient();
+      const { error: insertError } = await supabase.from("contact_messages").insert({
+        name: form.name,
+        phone: form.phone,
+        email: form.email || null,
+        topic: form.topic,
+        question: form.question,
+        file_url: fileUrl,
+        contact_method: form.contactMethod,
+      });
+
+      if (insertError) throw insertError;
+
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      setError("حدث خطأ أثناء إرسال السؤال. حاول مرة أخرى أو تواصل عبر واتساب مباشرة.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -116,6 +137,13 @@ export default function AskAbdullahPage() {
                 سيقوم المكتب بمراجعة سؤالك والتواصل معك مباشرة.
               </p>
             </div>
+
+            {error && (
+              <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3 mb-6">
+                <AlertCircle size={16} />
+                {error}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-[#EEE9DF] p-8 md:p-10">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

@@ -5,18 +5,17 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FloatingWhatsapp from "@/components/FloatingWhatsapp";
 import VideoCard from "@/components/VideoCard";
-import { VIDEOS } from "@/lib/content-data";
+import { getVideoBySlug, getPublishedVideos } from "@/lib/queries";
 import { whatsappUrl } from "@/lib/constants";
 
-export function generateStaticParams() {
-  return VIDEOS.map((v) => ({ slug: v.slug }));
-}
+export const dynamic = "force-dynamic";
 
-export default function VideoDetailPage({ params }: { params: { slug: string } }) {
-  const video = VIDEOS.find((v) => v.slug === params.slug);
+export default async function VideoDetailPage({ params }: { params: { slug: string } }) {
+  const video = await getVideoBySlug(params.slug);
   if (!video) notFound();
 
-  const related = VIDEOS.filter((v) => v.category === video.category && v.slug !== video.slug).slice(0, 3);
+  const allVideos = await getPublishedVideos();
+  const related = allVideos.filter((v) => v.category === video.category && v.slug !== video.slug).slice(0, 3);
 
   return (
     <>

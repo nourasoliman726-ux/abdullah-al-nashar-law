@@ -1,9 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Users, Shield, Gavel, Landmark, Building2, FileText, LucideIcon } from "lucide-react";
-import { SERVICES } from "@/lib/constants";
 
 const ICONS: Record<string, LucideIcon> = {
   Users,
@@ -14,7 +13,14 @@ const ICONS: Record<string, LucideIcon> = {
   FileText,
 };
 
-function ServiceCard({ icon, title, desc, index }: { icon: string; title: string; desc: string; index: number }) {
+type ServiceRow = {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+};
+
+function ServiceCard({ icon, title, description, index }: ServiceRow & { index: number }) {
   const Icon = ICONS[icon] ?? Users;
   return (
     <motion.div
@@ -31,7 +37,7 @@ function ServiceCard({ icon, title, desc, index }: { icon: string; title: string
         </div>
       </div>
       <h3 className="text-lg font-bold text-right mb-2 text-white">{title}</h3>
-      <p className="text-sm text-right leading-relaxed mb-6 text-grayText">{desc}</p>
+      <p className="text-sm text-right leading-relaxed mb-6 text-grayText">{description}</p>
       <div className="flex items-center justify-between">
         <button className="text-sm font-semibold text-gold">استشارة</button>
         <button className="text-sm font-semibold px-4 py-2 rounded-full border border-gold text-gold">
@@ -42,7 +48,7 @@ function ServiceCard({ icon, title, desc, index }: { icon: string; title: string
   );
 }
 
-export default function ServicesSection() {
+export default function ServicesSection({ services }: { services: ServiceRow[] }) {
   return (
     <section id="services" className="py-20 bg-navy">
       <div className="max-w-7xl mx-auto px-5 md:px-8">
@@ -63,11 +69,17 @@ export default function ServicesSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SERVICES.map((s, i) => (
-            <ServiceCard key={s.title} {...s} index={i} />
-          ))}
-        </div>
+        {services.length === 0 ? (
+          <p className="text-center text-grayText text-sm">
+            سيتم عرض الخدمات هنا فور إضافتها من لوحة التحكم.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {services.map((s, i) => (
+              <ServiceCard key={s.id} {...s} index={i} />
+            ))}
+          </div>
+        )}
 
         <div className="text-center mt-10">
           <Link

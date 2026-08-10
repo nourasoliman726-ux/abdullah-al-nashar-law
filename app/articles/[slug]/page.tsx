@@ -5,15 +5,13 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import FloatingWhatsapp from "@/components/FloatingWhatsapp";
 import ArticleCard from "@/components/ArticleCard";
-import { ARTICLES } from "@/lib/content-data";
+import { getArticleBySlug, getPublishedArticles } from "@/lib/queries";
 import { whatsappUrl, LEGAL_DISCLAIMER } from "@/lib/constants";
 
-export function generateStaticParams() {
-  return ARTICLES.map((a) => ({ slug: a.slug }));
-}
+export const dynamic = "force-dynamic";
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const article = ARTICLES.find((a) => a.slug === params.slug);
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const article = await getArticleBySlug(params.slug);
   if (!article) return {};
   return {
     title: article.seoTitle ?? article.title,
@@ -30,11 +28,12 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" });
 }
 
-export default function ArticleDetailPage({ params }: { params: { slug: string } }) {
-  const article = ARTICLES.find((a) => a.slug === params.slug);
+export default async function ArticleDetailPage({ params }: { params: { slug: string } }) {
+  const article = await getArticleBySlug(params.slug);
   if (!article) notFound();
 
-  const related = ARTICLES.filter((a) => a.category === article.category && a.slug !== article.slug).slice(0, 3);
+  const allArticles = await getPublishedArticles();
+  const related = allArticles.filter((a) => a.category === article.category && a.slug !== article.slug).slice(0, 3);
 
   return (
     <>
