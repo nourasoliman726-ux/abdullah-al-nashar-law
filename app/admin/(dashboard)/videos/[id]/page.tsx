@@ -2,9 +2,14 @@ import { notFound } from "next/navigation";
 import VideoForm from "@/components/admin/VideoForm";
 import { createClient } from "@/lib/supabase/server";
 
-export default async function EditVideoPage({ params }: { params: { id: string } }) {
+export default async function EditVideoPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
   const supabase = await createClient();
-  const { data: video } = await supabase.from("videos").select("*").eq("id", params.id).single();
+  const { data: video } = await supabase.from("videos").select("*").eq("id", id).single();
 
   if (!video) notFound();
 

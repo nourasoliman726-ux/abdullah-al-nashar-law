@@ -10,8 +10,13 @@ import { whatsappUrl } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
-export default async function VideoDetailPage({ params }: { params: { slug: string } }) {
-  const video = await getVideoBySlug(params.slug);
+export default async function VideoDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const video = await getVideoBySlug(slug);
   if (!video) notFound();
 
   const allVideos = await getPublishedVideos();

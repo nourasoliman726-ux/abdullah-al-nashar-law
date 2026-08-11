@@ -83,7 +83,7 @@ export default function ServicesSection({ services }: { services: ServiceRow[] }
 
         <div className="text-center mt-10">
           <Link
-            href="/services"
+            href="/#services"
             className="inline-block text-sm font-bold px-7 py-3 rounded-full border border-gold text-gold hover:bg-gold hover:text-navy transition-colors"
           >
             جميع مجالات العمل

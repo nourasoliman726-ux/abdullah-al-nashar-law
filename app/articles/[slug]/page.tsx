@@ -10,8 +10,13 @@ import { whatsappUrl, LEGAL_DISCLAIMER } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const article = await getArticleBySlug(params.slug);
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug);
   if (!article) return {};
   return {
     title: article.seoTitle ?? article.title,
@@ -28,8 +33,13 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("ar-EG", { year: "numeric", month: "long", day: "numeric" });
 }
 
-export default async function ArticleDetailPage({ params }: { params: { slug: string } }) {
-  const article = await getArticleBySlug(params.slug);
+export default async function ArticleDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
   const allArticles = await getPublishedArticles();
