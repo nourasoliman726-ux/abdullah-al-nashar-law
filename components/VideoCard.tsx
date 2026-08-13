@@ -11,10 +11,15 @@ export default function VideoCard({ video }: { video: Video }) {
     <div className="rounded-xl overflow-hidden bg-white border border-[#EEE9DF] flex flex-col">
       <Link
         href={`/videos/${video.slug}`}
-        className="relative aspect-video flex items-center justify-center"
-        style={{ background: "linear-gradient(135deg, #0B1428 0%, #151D2F 100%)" }}
+        className="relative aspect-video flex items-center justify-center bg-cover bg-center"
+        style={{
+          background: video.thumbnail
+            ? `url(${video.thumbnail}) center/cover no-repeat`
+            : "linear-gradient(135deg, #0B1428 0%, #151D2F 100%)",
+        }}
       >
-        <div className="w-14 h-14 rounded-full flex items-center justify-center bg-gold/90">
+        {video.thumbnail && <div className="absolute inset-0 bg-black/25" />}
+        <div className="relative w-14 h-14 rounded-full flex items-center justify-center bg-gold/90">
           <Play size={22} className="text-navy fill-navy" />
         </div>
         <span className="absolute top-3 right-3 text-xs font-bold px-3 py-1 rounded-full bg-navy/80 text-gold">

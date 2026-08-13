@@ -2,8 +2,8 @@ import Link from "next/link";
 import { Info } from "lucide-react";
 import { Video, Article } from "@/lib/types";
 import { LEGAL_DISCLAIMER } from "@/lib/constants";
-import VideoCard from "./VideoCard";
 import ArticleCard from "./ArticleCard";
+import VideosSlider from "./VideosSlider";
 
 function EmptyStateCard({ text }: { text: string }) {
   return (
@@ -20,7 +20,7 @@ export default function LegalContentSection({
   videos: Video[];
   articles: Article[];
 }) {
-  const latestVideos = videos.slice(0, 3);
+  const latestVideos = videos.slice(0, 6);
   const latestArticles = articles.slice(0, 3);
 
   return (
@@ -46,11 +46,7 @@ export default function LegalContentSection({
           {latestVideos.length === 0 ? (
             <EmptyStateCard text="سيتم نشر الفيديوهات القانونية هنا فور إضافتها من لوحة التحكم." />
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {latestVideos.map((v) => (
-                <VideoCard key={v.slug} video={v} />
-              ))}
-            </div>
+            <VideosSlider videos={latestVideos} />
           )}
         </div>
 

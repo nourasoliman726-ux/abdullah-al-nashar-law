@@ -3,9 +3,10 @@ export interface Video {
   title: string;
   category: string;
   description: string;
-  videoUrl: string; // رابط يوتيوب / فيسبوك / انستجرام
+  videoUrl: string; // رابط تضمين خارجي، أو رابط فيديو مرفوع من الجهاز
+  videoType: "embed" | "upload";
   thumbnail?: string;
-  publishedAt: string; // "2026-08-01"
+  publishedAt: string;
 }
 
 export interface Article {
@@ -13,7 +14,7 @@ export interface Article {
   title: string;
   category: string;
   excerpt: string;
-  content: string; // نص المقال (HTML أو Markdown مبسط)
+  content: string;
   coverImage?: string;
   author: string;
   publishedAt: string;

@@ -5,7 +5,7 @@ export async function getPublishedVideos(): Promise<Video[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("videos")
-    .select("slug, title, category, description, video_url, thumbnail, published_at")
+    .select("slug, title, category, description, video_url, video_type, thumbnail, published_at")
     .eq("status", "published")
     .order("published_at", { ascending: false });
 
@@ -15,6 +15,7 @@ export async function getPublishedVideos(): Promise<Video[]> {
     category: v.category,
     description: v.description,
     videoUrl: v.video_url,
+    videoType: (v.video_type as "embed" | "upload") ?? "embed",
     thumbnail: v.thumbnail ?? undefined,
     publishedAt: v.published_at,
   }));
@@ -24,7 +25,7 @@ export async function getVideoBySlug(slug: string): Promise<Video | null> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("videos")
-    .select("slug, title, category, description, video_url, thumbnail, published_at")
+    .select("slug, title, category, description, video_url, video_type, thumbnail, published_at")
     .eq("status", "published")
     .eq("slug", slug)
     .maybeSingle();
@@ -36,6 +37,7 @@ export async function getVideoBySlug(slug: string): Promise<Video | null> {
     category: data.category,
     description: data.description,
     videoUrl: data.video_url,
+    videoType: (data.video_type as "embed" | "upload") ?? "embed",
     thumbnail: data.thumbnail ?? undefined,
     publishedAt: data.published_at,
   };

@@ -34,13 +34,23 @@ export default async function VideoDetailPage({
           </div>
 
           <div className="aspect-video rounded-xl overflow-hidden bg-navy mb-6">
-            <iframe
-              src={video.videoUrl}
-              title={video.title}
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+            {video.videoType === "upload" ? (
+              <video
+                src={video.videoUrl}
+                poster={video.thumbnail}
+                controls
+                autoPlay
+                className="w-full h-full object-contain"
+              />
+            ) : (
+              <iframe
+                src={video.videoUrl}
+                title={video.title}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            )}
           </div>
 
           <div className="flex items-center justify-between mb-3">

@@ -13,8 +13,12 @@ export default function ArticleCard({ article }: { article: Article }) {
       className="rounded-xl overflow-hidden bg-white border border-[#EEE9DF] flex flex-col hover:border-gold transition-colors"
     >
       <div
-        className="aspect-[16/10]"
-        style={{ background: "linear-gradient(135deg, #0B1428 0%, #151D2F 100%)" }}
+        className="aspect-[16/10] bg-cover bg-center"
+        style={{
+          background: article.coverImage
+            ? `url(${article.coverImage}) center/cover no-repeat`
+            : "linear-gradient(135deg, #0B1428 0%, #151D2F 100%)",
+        }}
       />
       <div className="p-5 text-right flex-1 flex flex-col">
         <span className="text-xs font-bold text-gold mb-2">{article.category}</span>

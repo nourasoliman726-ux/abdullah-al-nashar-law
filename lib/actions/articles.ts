@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { plainTextToHtml } from "@/lib/textToHtml";
 
 export async function saveArticle(formData: FormData) {
   const supabase = await createClient();
@@ -12,7 +13,8 @@ export async function saveArticle(formData: FormData) {
     slug: (formData.get("slug") as string).trim(),
     title: (formData.get("title") as string).trim(),
     excerpt: (formData.get("excerpt") as string).trim(),
-    content: (formData.get("content") as string).trim(),
+    content: plainTextToHtml((formData.get("content") as string).trim()),
+    cover_image: (formData.get("cover_image") as string) || null,
     category: formData.get("category") as string,
     author: (formData.get("author") as string).trim() || "عبد الله النشار",
     reading_time_minutes: Number(formData.get("reading_time_minutes")) || 3,
@@ -31,6 +33,7 @@ export async function saveArticle(formData: FormData) {
 
   revalidatePath("/admin/articles");
   revalidatePath("/articles");
+  revalidatePath("/");
   redirect("/admin/articles");
 }
 
