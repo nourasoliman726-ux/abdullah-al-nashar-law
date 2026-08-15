@@ -29,12 +29,16 @@ export default async function Home() {
     <main>
       <Navbar />
       <Hero />
-      <TrustSection />
+    
       <AboutSection />
-      <ServicesSection services={services} />
+
       <LegalContentSection videos={videos} articles={articles} />
       <FaqSection faqs={faqs} />
+      <ServicesSection services={services} />
+        <TrustSection />
+
       <CtaBanner />
+
       <Footer />
       <FloatingWhatsapp />
     </main>

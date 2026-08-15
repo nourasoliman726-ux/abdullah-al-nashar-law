@@ -114,3 +114,23 @@ export async function getActiveFaqs() {
     .order("order_index", { ascending: true });
   return data ?? [];
 }
+
+export async function getKnowYourRights() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("know_your_rights")
+    .select("id, title, content, category")
+    .eq("is_active", true)
+    .order("order_index", { ascending: true });
+  return data ?? [];
+}
+
+export async function getActiveRightsTips() {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("rights_tips")
+    .select("id, title, content, category")
+    .eq("is_active", true)
+    .order("order_index", { ascending: true });
+  return data ?? [];
+}
